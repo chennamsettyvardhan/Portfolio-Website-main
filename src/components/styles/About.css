@@ -1,0 +1,176 @@
+.about-section {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  height: auto;
+  width: var(--cWidth);
+  margin: auto;
+  padding: 80px 0;
+}
+
+.about-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 1200px;
+  text-align: left;
+}
+
+.about-container h3 {
+  font-size: 25px;
+  text-transform: uppercase;
+  letter-spacing: 7px;
+  font-weight: 400;
+  color: var(--accentColor);
+  margin-bottom: 20px;
+}
+
+.about-container .about-bio {
+  font-size: 22px;
+  font-weight: 500;
+  line-height: 32px;
+  color: #eae5ec;
+  margin-bottom: 30px;
+}
+
+.about-details-row {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  width: 100%;
+}
+
+.about-profile-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.profile-image-container {
+  position: relative;
+  width: 240px;
+  height: 240px;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.profile-image-container:hover {
+  transform: scale(1.03);
+}
+
+.profile-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-border {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: 2px solid rgba(194, 164, 255, 0.2);
+  border-radius: 24px;
+  pointer-events: none;
+  transition: border-color 0.3s ease;
+}
+
+.profile-image-container:hover .profile-border {
+  border-color: rgba(194, 164, 255, 0.6);
+}
+
+.about-education {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.about-education h4 {
+  font-size: 18px;
+  text-transform: uppercase;
+  color: var(--accentColor);
+  letter-spacing: 2px;
+  margin: 0 0 12px 0;
+}
+
+.about-education h5 {
+  font-size: 18px;
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  color: #fff;
+}
+
+.about-education h6 {
+  font-size: 15px;
+  margin: 0 0 8px 0;
+  font-weight: 400;
+  color: #b5aeb8;
+}
+
+.about-education .edu-year {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--accentColor);
+  margin: 0;
+}
+
+@media only screen and (min-width: 768px) {
+  .about-details-row {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 40px;
+  }
+  .about-profile-wrapper {
+    justify-content: flex-start;
+  }
+}
+
+/* Desktop layout: Constrain to the right to avoid overlapping with 3D model */
+@media only screen and (min-width: 1025px) {
+  .about-section {
+    height: var(--vh);
+    padding: 0;
+    justify-content: flex-end; /* Align container to the right */
+  }
+  .about-container {
+    width: 48vw; /* Takes up only the right side of the screen */
+    margin: 0;
+  }
+  .about-container .about-bio {
+    font-size: 1.3vw;
+    line-height: 2vw;
+    margin-bottom: 25px;
+  }
+  .profile-image-container {
+    width: 160px;
+    height: 160px;
+    border-radius: 16px;
+  }
+  .profile-border {
+    border-radius: 16px;
+  }
+}
+
+@media only screen and (min-width: 1440px) {
+  .about-container {
+    width: 42vw;
+  }
+  .profile-image-container {
+    width: 200px;
+    height: 200px;
+    border-radius: 20px;
+  }
+  .profile-border {
+    border-radius: 20px;
+  }
+}
