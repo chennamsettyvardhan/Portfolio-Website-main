@@ -31,38 +31,79 @@ export class SplitText {
     targets.forEach(elem => {
       this.originalContent.push(elem.innerHTML);
 
-      const text = elem.textContent || '';
+      const childNodes = Array.from(elem.childNodes);
       elem.innerHTML = ''; 
 
-      const wordsArray = text.split(/\s+/);
       const wordSpans: HTMLElement[] = [];
       const charSpans: HTMLElement[] = [];
 
-      wordsArray.forEach((word, wordIdx) => {
-        if (word === '') return;
-        
-        const wordSpan = document.createElement('span');
-        wordSpan.style.display = 'inline-block';
-        wordSpan.className = 'split-word';
+      childNodes.forEach((node) => {
+        if (node.nodeType === Node.TEXT_NODE) {
+          const text = node.textContent || '';
+          const wordsArray = text.split(/(\s+)/);
+          wordsArray.forEach((word) => {
+            if (word === '') return;
+            if (/^\s+$/.test(word)) {
+              elem.appendChild(document.createTextNode(word));
+              return;
+            }
+            
+            const wordSpan = document.createElement('span');
+            wordSpan.style.display = 'inline-block';
+            wordSpan.className = 'split-word';
 
-        if (types.includes('chars')) {
-          for (let i = 0; i < word.length; i++) {
-            const charSpan = document.createElement('span');
-            charSpan.style.display = 'inline-block';
-            charSpan.className = 'split-char';
-            charSpan.textContent = word[i];
-            wordSpan.appendChild(charSpan);
-            charSpans.push(charSpan);
-          }
-        } else {
-          wordSpan.textContent = word;
-        }
+            if (types.includes('chars')) {
+              for (let i = 0; i < word.length; i++) {
+                const charSpan = document.createElement('span');
+                charSpan.style.display = 'inline-block';
+                charSpan.className = 'split-char';
+                charSpan.textContent = word[i];
+                wordSpan.appendChild(charSpan);
+                charSpans.push(charSpan);
+              }
+            } else {
+              wordSpan.textContent = word;
+            }
 
-        elem.appendChild(wordSpan);
-        wordSpans.push(wordSpan);
+            elem.appendChild(wordSpan);
+            wordSpans.push(wordSpan);
+          });
+        } else if (node.nodeName === 'BR') {
+          elem.appendChild(document.createElement('br'));
+        } else if (node.nodeType === Node.ELEMENT_NODE) {
+          const el = node as HTMLElement;
+          const text = el.textContent || '';
+          el.innerHTML = ''; 
+          
+          const wordsArray = text.split(/(\s+)/);
+          wordsArray.forEach((word) => {
+            if (word === '') return;
+            if (/^\s+$/.test(word)) {
+              el.appendChild(document.createTextNode(word));
+              return;
+            }
+            
+            const wordSpan = document.createElement('span');
+            wordSpan.style.display = 'inline-block';
+            wordSpan.className = 'split-word';
 
-        if (wordIdx < wordsArray.length - 1) {
-          elem.appendChild(document.createTextNode(' '));
+            if (types.includes('chars')) {
+              for (let i = 0; i < word.length; i++) {
+                const charSpan = document.createElement('span');
+                charSpan.style.display = 'inline-block';
+                charSpan.className = 'split-char';
+                charSpan.textContent = word[i];
+                wordSpan.appendChild(charSpan);
+                charSpans.push(charSpan);
+              }
+            } else {
+              wordSpan.textContent = word;
+            }
+
+            el.appendChild(wordSpan);
+            wordSpans.push(wordSpan);
+          });
+          elem.appendChild(el);
         }
       });
 
