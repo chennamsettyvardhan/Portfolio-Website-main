@@ -2,26 +2,54 @@ import { useEffect } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import HoverLinks from "./HoverLinks";
 import { gsap } from "gsap";
-import { ScrollSmoother } from "gsap-trial/ScrollSmoother";
+import Lenis from "lenis";
 import "./styles/Navbar.css";
 
-gsap.registerPlugin(ScrollSmoother, ScrollTrigger);
-export let smoother: ScrollSmoother;
+gsap.registerPlugin(ScrollTrigger);
+
+export let smoother: {
+  paused: (state: boolean) => void;
+  scrollTop: (value: number) => void;
+  scrollTo: (target: any, smooth?: boolean, position?: string) => void;
+};
 
 const Navbar = () => {
   useEffect(() => {
-    smoother = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper",
-      content: "#smooth-content",
-      smooth: 1.7,
-      speed: 1.7,
-      effects: true,
-      autoResize: true,
-      ignoreMobileResize: true,
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: "vertical",
+      gestureOrientation: "vertical",
+      smoothWheel: true,
+      wheelMultiplier: 1,
+      touchMultiplier: 2,
     });
 
-    smoother.scrollTop(0);
-    smoother.paused(true);
+    lenis.on("scroll", ScrollTrigger.update);
+
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+
+    gsap.ticker.lagSmoothing(0);
+
+    smoother = {
+      paused: (paused: boolean) => {
+        if (paused) {
+          lenis.stop();
+        } else {
+          lenis.start();
+        }
+      },
+      scrollTop: (y: number) => {
+        lenis.scrollTo(y, { immediate: true });
+      },
+      scrollTo: (target: any, smooth?: boolean, _position?: string) => {
+        lenis.scrollTo(target, { immediate: smooth === false });
+      },
+    };
+
+    lenis.stop();
 
     const links = document.querySelectorAll(".header ul a");
     links.forEach((elem) => {
@@ -31,13 +59,22 @@ const Navbar = () => {
           e.preventDefault();
           const elem = e.currentTarget as HTMLAnchorElement;
           const section = elem.getAttribute("data-href");
-          smoother.scrollTo(section, true, "top top");
+          if (section) {
+            lenis.scrollTo(section);
+          }
         }
       });
     });
-    window.addEventListener("resize", () => {
-      ScrollSmoother.refresh(true);
-    });
+
+    const resizeHandler = () => {
+      ScrollTrigger.refresh();
+    };
+    window.addEventListener("resize", resizeHandler);
+
+    return () => {
+      lenis.destroy();
+      window.removeEventListener("resize", resizeHandler);
+    };
   }, []);
   return (
     <>
