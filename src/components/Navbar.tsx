@@ -80,7 +80,7 @@ const Navbar = () => {
     <>
       <div className="header">
         <a href="/#" className="navbar-title" data-cursor="disable">
-          Logo
+          Dharma <span style={{ color: "var(--accentColor)" }}>Vardhan</span>
         </a>
         <ul>
           <li>
